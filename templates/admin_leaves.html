@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+{% block title %}Leave Management | Admin | Demachine solutions{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h2 class="mb-4 fw-bold text-primary text-center">Leave Management</h2>
+  <div class="card shadow-lg border-0 mb-4" style="border-radius: 1.5rem;">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped align-middle">
+          <thead class="table-dark">
+            <tr>
+              <th>User</th>
+              <th>Type</th>
+              <th>Start</th>
+              <th>End</th>
+              <th>Status</th>
+              <th>Reason</th>
+              <th>Admin Note</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for leave in leaves %}
+            <tr>
+              <td>{{ leave.user.name or leave.user.username }}</td>
+              <td>{{ leave.leave_type }}</td>
+              <td>{{ leave.start_date.strftime('%Y-%m-%d') }}</td>
+              <td>{{ leave.end_date.strftime('%Y-%m-%d') }}</td>
+              <td>
+                {% if leave.status == 'Approved' %}
+                  <span class="badge bg-success">Approved</span>
+                {% elif leave.status == 'Rejected' %}
+                  <span class="badge bg-danger">Rejected</span>
+                {% elif leave.status == 'Cancelled' %}
+                  <span class="badge bg-secondary">Cancelled</span>
+                {% else %}
+                  <span class="badge bg-warning text-dark">Pending</span>
+                {% endif %}
+              </td>
+              <td>{{ leave.reason }}</td>
+              <td>{{ leave.admin_note or '-' }}</td>
+              <td>
+                {% if leave.status != 'Cancelled' %}
+                <form method="post" action="/admin/leaves" class="mb-1">
+                  <input type="hidden" name="leave_id" value="{{ leave.id }}">
+                  <input type="hidden" name="action" value="approve">
+                  <button type="submit" class="btn btn-success btn-sm w-100 mb-1"><i class="bi bi-check2"></i> Approve</button>
+                </form>
+                <form method="post" action="/admin/leaves" class="mb-1">
+                  <input type="hidden" name="leave_id" value="{{ leave.id }}">
+                  <input type="hidden" name="action" value="reject">
+                  <input type="text" name="admin_note" class="form-control form-control-sm mb-1" placeholder="Rejection reason" required>
+                  <button type="submit" class="btn btn-danger btn-sm w-100"><i class="bi bi-x"></i> Reject</button>
+                </form>
+                <form method="post" action="/admin/leaves">
+                  <input type="hidden" name="leave_id" value="{{ leave.id }}">
+                  <input type="hidden" name="action" value="cancel">
+                  <button type="submit" class="btn btn-secondary btn-sm w-100"><i class="bi bi-x-circle"></i> Cancel</button>
+                </form>
+                {% else %}
+                  <span class="text-muted">No actions</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="8" class="text-center">No leave requests found.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} 

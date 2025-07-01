@@ -1,0 +1,63 @@
+{% extends 'layout.html' %}
+{% block title %}Settings | Demachine solutions{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-7">
+      <div class="card shadow-lg border-0 mb-4" style="border-radius: 1.5rem;">
+        <div class="card-body">
+          <h2 class="fw-bold text-primary mb-4">Settings</h2>
+
+          <!-- Password Change Section -->
+          <h5 class="fw-bold mb-3">Change Password</h5>
+          <form method="post" action="/profile/change_password" autocomplete="off" class="mb-4">
+            <div class="mb-3">
+              <label for="current_password" class="form-label">Current Password</label>
+              <input type="password" class="form-control" id="current_password" name="current_password" required>
+            </div>
+            <div class="mb-3">
+              <label for="new_password" class="form-label">New Password</label>
+              <input type="password" class="form-control" id="new_password" name="new_password" required>
+            </div>
+            <div class="mb-3">
+              <label for="confirm_password" class="form-label">Confirm New Password</label>
+              <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+            </div>
+            <div class="d-grid">
+              <button type="submit" class="btn btn-outline-primary">Change Password</button>
+            </div>
+          </form>
+
+          <hr>
+
+          <!-- Notification Preferences Section -->
+          <h5 class="fw-bold mb-3">Notification Preferences</h5>
+          <form method="post" action="/settings" autocomplete="off" class="mb-4">
+            <input type="hidden" name="change_notifications" value="1">
+            <div class="form-check form-switch mb-2">
+              <input class="form-check-input" type="checkbox" id="email_notifications" name="email_notifications" {% if current_user.email_notifications %}checked{% endif %}>
+              <label class="form-check-label" for="email_notifications">Email Notifications</label>
+            </div>
+            <div class="form-check form-switch mb-2">
+              <input class="form-check-input" type="checkbox" id="sms_notifications" name="sms_notifications" {% if current_user.sms_notifications %}checked{% endif %}>
+              <label class="form-check-label" for="sms_notifications">SMS Notifications</label>
+            </div>
+            <div class="d-grid">
+              <button type="submit" class="btn btn-outline-primary">Save Preferences</button>
+            </div>
+          </form>
+
+          <hr>
+
+          <!-- Account Options Section -->
+          <h5 class="fw-bold mb-3">Account Options</h5>
+          <form method="post" action="/settings" autocomplete="off" onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.');">
+            <input type="hidden" name="delete_account" value="1">
+            <button type="submit" class="btn btn-outline-danger">Delete My Account</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} 

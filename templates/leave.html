@@ -1,0 +1,93 @@
+{% extends "layout.html" %}
+{% block title %}Leave | Demachine solutions{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h2 class="mb-4 fw-bold text-primary text-center">Leave Management</h2>
+  <div class="card shadow-lg border-0 mb-4" style="border-radius: 1.5rem;">
+    <div class="card-body">
+      <!-- Navigation Tabs -->
+      <ul class="nav nav-tabs" id="leaveTabs">
+        <li class="nav-item">
+          <a class="nav-link active" data-bs-toggle="tab" href="#request-leave">Request Leave</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-bs-toggle="tab" href="#leave-status">Leave Status</a>
+        </li>
+      </ul>
+      <!-- Tab Contents -->
+      <div class="tab-content mt-4">
+        <!-- Request Leave Form -->
+        <div class="tab-pane fade show active" id="request-leave">
+          <form method="post" action="/leave" autocomplete="off">
+            <div class="mb-3">
+              <label for="leave_type" class="form-label">Leave Type</label>
+              <select class="form-select" id="leave_type" name="leave_type" required>
+                <option value="">-- Select Type --</option>
+                <option value="Annual">Annual</option>
+                <option value="Sick">Sick</option>
+                <option value="Unpaid">Unpaid</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="start_date" class="form-label">Start Date</label>
+              <input type="date" class="form-control" id="start_date" name="start_date" required>
+            </div>
+            <div class="mb-3">
+              <label for="end_date" class="form-label">End Date</label>
+              <input type="date" class="form-control" id="end_date" name="end_date" required>
+            </div>
+            <div class="mb-3">
+              <label for="reason" class="form-label">Reason</label>
+              <textarea class="form-control" id="reason" name="reason" rows="3" required></textarea>
+            </div>
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary btn-lg">Submit Request</button>
+            </div>
+          </form>
+        </div>
+        <!-- Leave Status Table -->
+        <div class="tab-pane fade" id="leave-status">
+          <div class="table-responsive">
+            <table class="table table-striped mt-3 align-middle">
+              <thead class="table-dark">
+                <tr>
+                  <th>Type</th>
+                  <th>Start</th>
+                  <th>End</th>
+                  <th>Status</th>
+                  <th>Admin Note</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for leave in my_leaves %}
+                <tr>
+                  <td>{{ leave.leave_type }}</td>
+                  <td>{{ leave.start_date }}</td>
+                  <td>{{ leave.end_date }}</td>
+                  <td>
+                    {% if leave.status == 'Approved' %}
+                      <span class="badge bg-success">{{ leave.status }}</span>
+                    {% elif leave.status == 'Rejected' %}
+                      <span class="badge bg-danger">{{ leave.status }}</span>
+                    {% elif leave.status == 'Cancelled' %}
+                      <span class="badge bg-secondary">{{ leave.status }}</span>
+                    {% else %}
+                      <span class="badge bg-warning text-dark">Pending</span>
+                    {% endif %}
+                  </td>
+                  <td>{{ leave.admin_note or '-' }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                  <td colspan="5" class="text-center">No leave records found.</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

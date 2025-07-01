@@ -1,0 +1,168 @@
+{% extends "layout.html" %}
+{% block title %}Edit User | Admin | TMA Attendance{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h2 class="mb-4 fw-bold text-primary text-center">Edit User</h2>
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card shadow-lg border-0 mb-4" style="border-radius: 1.5rem;">
+        <div class="card-body">
+          <form method="post" action="/admin/users/{{ user.id }}" autocomplete="off" id="editUserForm">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label for="name" class="form-label">Full Name</label>
+                <input type="text" class="form-control" id="name" name="name" value="{{ user.name }}" required>
+              </div>
+              <div class="col-md-6">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" required>
+              </div>
+              <div class="col-md-6">
+                <label for="phone" class="form-label">Phone</label>
+                <input type="text" class="form-control" id="phone" name="phone" value="{{ user.phone or '' }}">
+              </div>
+              <div class="col-md-3">
+                <label for="role" class="form-label">Role</label>
+                <select class="form-select" id="role" name="role">
+                  <option value="user" {% if user.role == 'user' %}selected{% endif %}>User</option>
+                  <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Admin</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <label for="is_active" class="form-label">Status</label>
+                <select class="form-select" id="is_active" name="is_active">
+                  <option value="1" {% if user.is_active %}selected{% endif %}>Active</option>
+                  <option value="0" {% if not user.is_active %}selected{% endif %}>Inactive</option>
+                </select>
+              </div>
+            </div>
+            <div class="d-grid mt-4">
+              <button type="submit" class="btn btn-primary btn-lg">Save Changes</button>
+            </div>
+          </form>
+          <hr>
+          <ul class="nav nav-tabs mt-4" id="userTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="attendance-tab" data-bs-toggle="tab" data-bs-target="#attendance" type="button" role="tab">Attendance</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="leave-tab" data-bs-toggle="tab" data-bs-target="#leave" type="button" role="tab">Leave</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="payroll-tab" data-bs-toggle="tab" data-bs-target="#payroll" type="button" role="tab">Payroll</button>
+            </li>
+          </ul>
+          <div class="tab-content mt-3">
+            <div class="tab-pane fade show active" id="attendance" role="tabpanel">
+              <div class="table-responsive">
+                <table class="table table-bordered table-striped align-middle">
+                  <thead class="table-dark">
+                    <tr>
+                      <th>Date</th>
+                      <th>Time</th>
+                      <th>Status</th>
+                      <th>Location</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for record in user_attendance %}
+                    <tr>
+                      <td>{{ record.timestamp.strftime('%Y-%m-%d') }}</td>
+                      <td>{{ record.timestamp.strftime('%H:%M:%S') }}</td>
+                      <td>{{ record.status }}</td>
+                      <td>{{ record.location or '-' }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                      <td colspan="4" class="text-center">No attendance records found.</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="leave" role="tabpanel">
+              <div class="table-responsive">
+                <table class="table table-bordered table-striped align-middle">
+                  <thead class="table-dark">
+                    <tr>
+                      <th>Type</th>
+                      <th>Start</th>
+                      <th>End</th>
+                      <th>Status</th>
+                      <th>Reason</th>
+                      <th>Admin Note</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for leave in user_leaves %}
+                    <tr>
+                      <td>{{ leave.leave_type }}</td>
+                      <td>{{ leave.start_date.strftime('%Y-%m-%d') }}</td>
+                      <td>{{ leave.end_date.strftime('%Y-%m-%d') }}</td>
+                      <td>{{ leave.status }}</td>
+                      <td>{{ leave.reason }}</td>
+                      <td>{{ leave.admin_note or '-' }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                      <td colspan="6" class="text-center">No leave records found.</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="payroll" role="tabpanel">
+              <div class="table-responsive">
+                <table class="table table-bordered table-striped align-middle">
+                  <thead class="table-dark">
+                    <tr>
+                      <th>Period</th>
+                      <th>Base Salary</th>
+                      <th>Bonuses</th>
+                      <th>Deductions</th>
+                      <th>Net Pay</th>
+                      <th>Generated At</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for payroll in user_payrolls %}
+                    <tr>
+                      <td>{{ payroll.period_start.strftime('%Y-%m-%d') }} - {{ payroll.period_end.strftime('%Y-%m-%d') }}</td>
+                      <td>R {{ payroll.base_salary }}</td>
+                      <td>R {{ payroll.bonuses }}</td>
+                      <td>R {{ payroll.deductions }}</td>
+                      <td><strong>R {{ payroll.net_pay }}</strong></td>
+                      <td>{{ payroll.generated_at.strftime('%Y-%m-%d') }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                      <td colspan="6" class="text-center">No payroll records found.</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.getElementById('editUserForm');
+  const roleSelect = document.getElementById('role');
+  let originalRole = roleSelect.value;
+  form.addEventListener('submit', function(e) {
+    if (roleSelect.value !== originalRole) {
+      if (!confirm('Are you sure you want to change this user\'s role to "' + roleSelect.value.charAt(0).toUpperCase() + roleSelect.value.slice(1) + '"?')) {
+        e.preventDefault();
+      }
+    }
+  });
+});
+</script>
+{% endblock %} 

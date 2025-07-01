@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% block title %}My Profile | Demachine solutions{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h2 class="mb-4 fw-bold text-primary text-center">My Profile</h2>
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+      <div class="card shadow-lg border-0 mb-4" style="border-radius: 1.5rem;">
+        <div class="card-body">
+          <div class="text-center mb-4">
+            {% if current_user.profile_picture %}
+              <img src="{{ url_for('static', filename='images/profiles/' + current_user.profile_picture) }}" alt="Profile Picture" class="rounded-circle" style="width:100px; height:100px; object-fit:cover; border:3px solid #eee;">
+            {% else %}
+              <img src="{{ url_for('static', filename='images/default_avatar.png') }}" alt="Profile Picture" class="rounded-circle" style="width:100px; height:100px; object-fit:cover; border:3px solid #eee;">
+            {% endif %}
+          </div>
+          <form method="post" action="/profile/upload_picture" enctype="multipart/form-data" class="mb-4">
+            <div class="mb-3">
+              <label for="profile_picture" class="form-label">Upload Profile Picture</label>
+              <input type="file" class="form-control" id="profile_picture" name="profile_picture" accept="image/*" required>
+            </div>
+            <button type="submit" class="btn btn-outline-primary">Upload</button>
+          </form>
+          <form method="post" action="/profile" autocomplete="off">
+            <div class="mb-3">
+              <label for="name" class="form-label">Full Name</label>
+              <input type="text" class="form-control" id="name" name="name" value="{{ current_user.name }}" required>
+            </div>
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" class="form-control" id="email" name="email" value="{{ current_user.email }}" required>
+            </div>
+            <div class="mb-3">
+              <label for="phone" class="form-label">Phone</label>
+              <input type="text" class="form-control" id="phone" name="phone" value="{{ current_user.phone or '' }}">
+            </div>
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary btn-lg">Save Changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} 

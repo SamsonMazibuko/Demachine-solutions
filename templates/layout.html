@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Demachine solutions{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a237e;
+            --secondary: #00bcd4;
+            --accent: #ff9800;
+            --bg-light: #f4f8fb;
+            --bg-dark: #232a3b;
+            --sidebar-width: 250px;
+        }
+        html, body {
+            min-height: 100vh;
+            font-family: 'Poppins', Arial, sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: #222;
+        }
+        .sidebar {
+            background: linear-gradient(to bottom right, var(--primary), var(--secondary));
+            color: #fff;
+            width: var(--sidebar-width);
+            min-height: 100vh;
+            padding: 32px 18px 18px 18px;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.08);
+            border-top-right-radius: 20px;
+            border-bottom-right-radius: 20px;
+            position: relative;
+        }
+        .sidebar .brand {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            justify-content: center;
+            text-align: center;
+        }
+        .sidebar .brand-logo {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            border: 4px solid #fff;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+            margin-bottom: 18px;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #fff;
+            margin-right: 1rem;
+        }
+        .sidebar .brand-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 0;
+        }
+        .sidebar .nav-link {
+            color: #e0e0ff;
+            font-weight: 500;
+            padding: 12px 18px;
+            margin: 6px 0;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.3s, color 0.2s, transform 0.2s;
+        }
+        .sidebar .nav-link i {
+            margin-right: 10px;
+        }
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            transform: translateX(4px);
+        }
+        .theme-toggle {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: rgba(255,255,255,0.15);
+            border-radius: 50%;
+            border: none;
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: background 0.2s;
+        }
+        .theme-toggle:hover {
+            background: var(--accent);
+            color: #fff;
+        }
+        .main-content {
+            padding: 40px 24px;
+            width: 100%;
+            background: linear-gradient(to bottom right, #fefefe, #f1f5ff);
+            border-top-left-radius: 20px;
+            min-height: 100vh;
+        }
+        @media (max-width: 900px) {
+            .sidebar { width: 100vw; min-height: unset; border-radius: 0; padding: 18px; }
+            .main-content { padding: 18px 4px; border-radius: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="brand" style="justify-content: center; text-align: center;">
+                <div class="brand-logo" style="margin: 0 auto;">
+                    <img src="{{ url_for('static', filename='images/Demachine solutions.png') }}" alt="Demachine solutions logo" style="width:96px; height:96px; object-fit:cover; border-radius:50%; border:4px solid #fff; box-shadow:0 4px 16px rgba(0,0,0,0.18); margin-bottom:18px; background:#fff;">
+                </div>
+            </div>
+            <button class="theme-toggle" id="themeToggle" title="Toggle dark/light mode">
+                <i class="bi bi-moon" id="themeIcon"></i>
+            </button>
+            <ul class="nav flex-column mt-4">
+                {% if current_user.is_authenticated %}
+                    {% if current_user.role == 'admin' %}
+                        <li class="nav-item"><a href="/admin" class="nav-link"><i class="bi bi-speedometer2"></i> Admin Dashboard</a></li>
+                        <li class="nav-item"><a href="/admin/users" class="nav-link"><i class="bi bi-people"></i> User Management</a></li>
+                        <li class="nav-item"><a href="/admin/leaves" class="nav-link"><i class="bi bi-calendar-check"></i> Leave Management</a></li>
+                        <li class="nav-item"><a href="/admin/payroll" class="nav-link"><i class="bi bi-cash"></i> Payroll Management</a></li>
+                        <li class="nav-item"><a href="/admin/attendance" class="nav-link"><i class="bi bi-person-check"></i> Attendance Management</a></li>
+                        <li><hr></li>
+                    {% endif %}
+                    <li class="nav-item"><a href="/dashboard" class="nav-link"><i class="bi bi-house"></i> Dashboard</a></li>
+                    <li class="nav-item"><a href="/attendance" class="nav-link"><i class="bi bi-person-check"></i> Attendance</a></li>
+                    <li class="nav-item"><a href="/payroll" class="nav-link"><i class="bi bi-cash"></i> Payroll</a></li>
+                    <li class="nav-item"><a href="/notifications" class="nav-link"><i class="bi bi-bell"></i> Notifications
+                      {% if g.unread_notifications and g.unread_notifications > 0 %}
+                        <span class="badge bg-danger ms-1">{{ g.unread_notifications }}</span>
+                      {% endif %}
+                    </a></li>
+                    <li class="nav-item"><a href="/logout" class="nav-link"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+                {% else %}
+                    <li class="nav-item"><a href="/login" class="nav-link"><i class="bi bi-box-arrow-in-right"></i> Login</a></li>
+                {% endif %}
+            </ul>
+        </div>
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="d-flex justify-content-end align-items-center mb-3" style="min-height:56px;">
+                <div class="dropdown">
+                    <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        {% if current_user.profile_picture %}
+                            <img src="{{ url_for('static', filename='images/profiles/' + current_user.profile_picture) }}" alt="Profile" class="rounded-circle me-2" style="width:40px; height:40px; object-fit:cover;">
+                        {% else %}
+                            <img src="{{ url_for('static', filename='images/default_avatar.png') }}" alt="Profile" class="rounded-circle me-2" style="width:40px; height:40px; object-fit:cover;">
+                        {% endif %}
+                        <span class="fw-semibold text-dark">{{ current_user.name or current_user.username }}</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                        <li><a class="dropdown-item" href="/profile"><i class="bi bi-person"></i> Profile</a></li>
+                        <li><a class="dropdown-item" href="/settings"><i class="bi bi-gear"></i> Settings</a></li>
+                    </ul>
+                </div>
+            </div>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Auto-dismiss flash messages after 3 seconds
+      window.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+          document.querySelectorAll('.alert-dismissible').forEach(function(alert) {
+            alert.classList.remove('show');
+            setTimeout(function() {
+              alert.remove();
+            }, 150); // matches Bootstrap fade transition
+          });
+        }, 3000);
+      });
+    </script>
+    <script>
+      // Dark/Light mode toggle
+      const themeToggle = document.getElementById('themeToggle');
+      const themeIcon = document.getElementById('themeIcon');
+      let darkMode = false;
+      themeToggle.onclick = function() {
+        darkMode = !darkMode;
+        if (darkMode) {
+          document.body.style.background = 'linear-gradient(135deg, #232a3b 0%, #1a237e 100%)';
+          document.querySelector('.sidebar').style.background = 'linear-gradient(to bottom right, #232a3b, #1a237e)';
+          document.querySelector('.main-content').style.background = 'linear-gradient(to bottom right, #232a3b, #1a237e)';
+          themeIcon.classList.remove('bi-moon');
+          themeIcon.classList.add('bi-sun');
+        } else {
+          document.body.style.background = 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)';
+          document.querySelector('.sidebar').style.background = 'linear-gradient(to bottom right, var(--primary), var(--secondary))';
+          document.querySelector('.main-content').style.background = 'linear-gradient(to bottom right, #fefefe, #f1f5ff)';
+          themeIcon.classList.remove('bi-sun');
+          themeIcon.classList.add('bi-moon');
+        }
+      };
+    </script>
+    {% if current_user.is_authenticated and current_user.role != 'admin' %}
+      <button onclick="callAdmin()" class="btn btn-primary" style="position:fixed;bottom:30px;right:30px;z-index:9999;">Call Admin</button>
+    {% endif %}
+    <!-- Call Modal -->
+    <div class="modal fade" id="callModal" tabindex="-1" aria-labelledby="callModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="callModalLabel">In Call</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="endCall()"></button>
+          </div>
+          <div class="modal-body text-center">
+            <div id="callStatus" class="mb-2">Connecting...</div>
+            <div class="d-flex justify-content-center align-items-center mb-2">
+              <video id="localVideo" autoplay muted playsinline width="160" height="120" style="background:#222;border-radius:8px;"></video>
+              <video id="remoteVideo" autoplay playsinline width="320" height="240" style="background:#222;border-radius:8px;margin-left:10px;"></video>
+            </div>
+            <button class="btn btn-danger mt-2" onclick="endCall()">End Call</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="display:none;">
+      <video id="localVideo" autoplay muted playsinline width="1" height="1"></video>
+      <video id="remoteVideo" autoplay playsinline width="1" height="1"></video>
+    </div>
+    <script>
+      window.currentUserId = {{ current_user.id if current_user.is_authenticated else 'null' }};
+      window.currentUserRole = '{{ current_user.role if current_user.is_authenticated else '' }}';
+    </script>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script src="/static/call.js"></script>
+    <!-- Incoming Call Modal (for Admins) -->
+    <div class="modal fade" id="incomingCallModal" tabindex="-1" aria-labelledby="incomingCallModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="incomingCallModalLabel">Incoming Call</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="rejectCall()"></button>
+          </div>
+          <div class="modal-body text-center">
+            <div id="incomingCallStatus" class="mb-3">A user is calling you. Would you like to accept?</div>
+            <button class="btn btn-success me-2" onclick="acceptCall()">Accept</button>
+            <button class="btn btn-danger" onclick="rejectCall()">Reject</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Floating Call Bar (Minimized Call Widget) -->
+    <div id="callBar" style="display:none;position:fixed;bottom:20px;left:20px;z-index:99999;background:#fff;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.15);padding:10px 18px;align-items:center;gap:10px;min-width:180px;">
+      <span id="callBarStatus" style="font-weight:500;color:#1a237e;">In call...</span>
+      <button class="btn btn-sm btn-outline-primary" onclick="restoreCallModal()"><i class="bi bi-camera-video"></i></button>
+      <button class="btn btn-sm btn-outline-danger" onclick="endCall()"><i class="bi bi-telephone-x"></i></button>
+    </div>
+</body>
+</html>

@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+{% block title %}User Management | Admin | Demachine solutions{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h2 class="mb-4 fw-bold text-primary text-center">User Management</h2>
+  <div class="d-flex justify-content-end mb-3">
+    <a href="/admin/users/add" class="btn btn-success"><i class="bi bi-person-plus"></i> Add User</a>
+  </div>
+  <div class="card shadow-lg border-0 mb-4" style="border-radius: 1.5rem;">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped align-middle">
+          <thead class="table-dark">
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for user in users %}
+            <tr>
+              <td>
+                {{ user.name or user.username }}
+                {% if user.role == 'admin' %}
+                  <span class="badge bg-primary ms-1">Admin</span>
+                {% endif %}
+              </td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.phone or '-' }}</td>
+              <td>{{ user.role|capitalize }}</td>
+              <td>
+                {% if user.is_active %}
+                  <span class="badge bg-success">Active</span>
+                {% else %}
+                  <span class="badge bg-danger">Inactive</span>
+                {% endif %}
+              </td>
+              <td>
+                <a href="/admin/users/{{ user.id }}" class="btn btn-primary btn-sm mb-1 w-100"><i class="bi bi-pencil"></i> Edit</a>
+                {% if user.is_active %}
+                  <a href="/admin/users/{{ user.id }}/deactivate" class="btn btn-warning btn-sm mb-1 w-100"><i class="bi bi-person-dash"></i> Deactivate</a>
+                {% else %}
+                  <a href="/admin/users/{{ user.id }}/activate" class="btn btn-success btn-sm mb-1 w-100"><i class="bi bi-person-check"></i> Activate</a>
+                {% endif %}
+                <a href="/admin/users/{{ user.id }}/reset_password" class="btn btn-secondary btn-sm w-100"><i class="bi bi-key"></i> Reset Password</a>
+              </td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="6" class="text-center">No users found.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} 

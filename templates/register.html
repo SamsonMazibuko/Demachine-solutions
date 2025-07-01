@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block title %}Register | Demachine solutions{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+  <div class="card shadow p-4" style="max-width: 400px; width: 100%; border-radius: 1.5rem;">
+    <h2 class="mb-3 text-center text-primary fw-bold">Create Account</h2>
+    <form method="POST" action="{{ url_for('register') }}">
+    <div class="mb-3">
+      <label for="name" class="form-label">Full Name</label>
+      <input type="text" class="form-control" id="name" name="name" required>
+    </div>
+    <div class="mb-3">
+      <label for="username" class="form-label">Username</label>
+      <input type="text" class="form-control" id="username" name="username" required>
+    </div>
+    <div class="mb-3">
+      <label for="email" class="form-label">Email</label>
+      <input type="email" class="form-control" id="email" name="email" required>
+    </div>
+    <div class="mb-3">
+      <label for="password" class="form-label">Password</label>
+      <input type="password" class="form-control" id="password" name="password" required>
+    </div>
+    <button type="submit" class="btn btn-main w-100 mt-2">Register</button>
+    </form>
+    <div class="text-center mt-3">
+      <span>Already have an account?</span>
+      <a href="{{ url_for('login') }}" class="text-decoration-none text-primary fw-semibold">Login</a>
+    </div>
+  </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,33 @@
+{% extends 'layout.html' %}
+{% block title %}Payslip | Demachine solutions{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-7">
+      <div class="card shadow-lg border-0 mb-4" style="border-radius: 1.5rem;">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="fw-bold text-primary mb-0">Payslip</h2>
+            <button onclick="window.print()" class="btn btn-outline-secondary"><i class="bi bi-printer"></i> Print</button>
+          </div>
+          <hr>
+          <div class="mb-3">
+            <strong>Name:</strong> {{ payroll.user.name or payroll.user.username }}<br>
+            <strong>Period:</strong> {{ payroll.period_start.strftime('%Y-%m-%d') }} to {{ payroll.period_end.strftime('%Y-%m-%d') }}<br>
+            <strong>Payslip Date:</strong> {{ payroll.generated_at.strftime('%Y-%m-%d') }}
+          </div>
+          <table class="table table-bordered mb-4">
+            <tbody>
+              <tr><th>Base Salary</th><td>R {{ payroll.base_salary }}</td></tr>
+              <tr><th>Bonuses</th><td>R {{ payroll.bonuses }}</td></tr>
+              <tr><th>Deductions</th><td>R {{ payroll.deductions }}</td></tr>
+              <tr class="table-success"><th>Net Pay</th><td><strong>R {{ payroll.net_pay }}</strong></td></tr>
+            </tbody>
+          </table>
+          <div class="text-muted small">This is a system-generated payslip from Demachine solutions.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} 

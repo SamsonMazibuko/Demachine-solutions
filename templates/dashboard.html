@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% block title %}Dashboard | Demachine solutions{% endblock %}
+{% block content %}
+<div class="container-fluid">
+  <h2 class="mb-4 fw-bold text-primary">Welcome, {{ current_user.name or current_user.username }}!</h2>
+  <div class="row g-4">
+    <div class="col-md-3">
+      <div class="card shadow-sm border-0 text-center">
+        <div class="card-body">
+          <i class="bi bi-person-check display-5 text-success mb-2"></i>
+          <h5 class="card-title">Attendance</h5>
+          <p class="card-text">View and mark your attendance.</p>
+          <a href="/attendance" class="btn btn-outline-success w-100">Go</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card shadow-sm border-0 text-center">
+        <div class="card-body">
+          <i class="bi bi-calendar-check display-5 text-primary mb-2"></i>
+          <h5 class="card-title">Leave</h5>
+          <p class="card-text">Request and track your leave.</p>
+          <a href="/leave" class="btn btn-outline-primary w-100">Go</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card shadow-sm border-0 text-center">
+        <div class="card-body">
+          <i class="bi bi-cash display-5 text-info mb-2"></i>
+          <h5 class="card-title">Payroll</h5>
+          <p class="card-text">View your payroll and payslips.</p>
+          <a href="/payroll" class="btn btn-outline-info w-100">Go</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card shadow-sm border-0 text-center">
+        <div class="card-body">
+          <i class="bi bi-bell display-5 text-warning mb-2"></i>
+          <h5 class="card-title">Notifications</h5>
+          <p class="card-text">View your notifications.</p>
+          <a href="/notifications" class="btn btn-outline-warning w-100">Go</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

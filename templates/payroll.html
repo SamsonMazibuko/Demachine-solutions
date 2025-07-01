@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+{% block title %}Payroll | Demachine solutions{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h2 class="mb-4 fw-bold text-primary text-center">Payroll Summary</h2>
+  <div class="card shadow-lg border-0 mb-4" style="border-radius: 1.5rem;">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped align-middle">
+          <thead class="table-dark">
+            <tr>
+              <th>Period</th>
+              <th>Base Salary</th>
+              <th>Bonuses</th>
+              <th>Deductions</th>
+              <th>Net Pay</th>
+              <th>Generated At</th>
+              <th>Payslip</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for payroll in payrolls %}
+            <tr>
+              <td>{{ payroll.period_start.strftime('%Y-%m-%d') }} - {{ payroll.period_end.strftime('%Y-%m-%d') }}</td>
+              <td>R {{ payroll.base_salary }}</td>
+              <td>R {{ payroll.bonuses }}</td>
+              <td>R {{ payroll.deductions }}</td>
+              <td><strong>R {{ payroll.net_pay }}</strong></td>
+              <td>{{ payroll.generated_at.strftime('%Y-%m-%d') }}</td>
+              <td><a href="/payroll/{{ payroll.id }}/payslip" class="btn btn-outline-primary btn-sm">View Payslip</a></td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="7" class="text-center">No payroll records found.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

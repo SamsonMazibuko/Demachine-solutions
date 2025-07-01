@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+{% block title %}Attendance Management | Admin | Demachine solutions{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h2 class="mb-4 fw-bold text-primary text-center">Attendance Management</h2>
+  <div class="card shadow-lg border-0 mb-4" style="border-radius: 1.5rem;">
+    <div class="card-body">
+      <form method="get" class="row g-3 mb-4">
+        <div class="col-md-4">
+          <label for="user_id" class="form-label">User</label>
+          <select class="form-select" id="user_id" name="user_id">
+            <option value="">All Users</option>
+            {% for user in all_users %}
+            <option value="{{ user.id }}" {% if user.id|string == request.args.get('user_id', '') %}selected{% endif %}>{{ user.name or user.username }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label for="start_date" class="form-label">Start Date</label>
+          <input type="date" class="form-control" id="start_date" name="start_date" value="{{ request.args.get('start_date', '') }}">
+        </div>
+        <div class="col-md-3">
+          <label for="end_date" class="form-label">End Date</label>
+          <input type="date" class="form-control" id="end_date" name="end_date" value="{{ request.args.get('end_date', '') }}">
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+          <button type="submit" class="btn btn-primary w-100">Filter</button>
+        </div>
+      </form>
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped align-middle">
+          <thead class="table-dark">
+            <tr>
+              <th>User</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Status</th>
+              <th>Location</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for record in attendance_records %}
+            <tr>
+              <td>{{ record.user.name or record.user.username }}</td>
+              <td>{{ record.timestamp.strftime('%Y-%m-%d') }}</td>
+              <td>{{ record.timestamp.strftime('%H:%M:%S') }}</td>
+              <td>{{ record.status }}</td>
+              <td>{{ record.location or '-' }}</td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="5" class="text-center">No attendance records found.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} 
