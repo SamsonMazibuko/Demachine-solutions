@@ -1,0 +1,80 @@
+<!-- templates/notifications.html -->
+{% extends "layout.html" %}
+{% block title %}Notifications | Demachine solutions{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h2 class="mb-4 fw-bold text-primary text-center">Your Notifications</h2>
+  <div class="card shadow-lg border-0 mb-4" style="border-radius: 1.5rem;">
+    <div class="card-body">
+      {% if notifications %}
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped align-middle">
+          <thead class="table-dark">
+            <tr>
+              <th>ID</th>
+              <th>Message</th>
+              <th>Status</th>
+              <th>Timestamp</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for notification in notifications %}
+            <tr class="{% if not notification.is_read %}table-warning{% endif %}">
+              <td>{{ notification.id }}</td>
+              <td>
+                <a href="{{ url_for('view_notification', notification_id=notification.id) }}" class="text-decoration-none {% if not notification.is_read %}fw-bold{% endif %}">
+                  {{ notification.message|truncate(50) }}
+                </a>
+                {% if not notification.is_read %}
+                  <span class="badge bg-warning text-dark ms-1">Unread</span>
+                {% endif %}
+                <button class="btn btn-sm btn-outline-secondary ms-2"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#notif-{{ notification.id }}"
+                        aria-expanded="false"
+                        aria-controls="notif-{{ notification.id }}"
+                        id="toggle-btn-{{ notification.id }}">
+                  Open
+                </button>
+                <div class="collapse mt-2" id="notif-{{ notification.id }}">
+                  <div class="card card-body">
+                    {{ notification.message }}
+                  </div>
+                </div>
+              </td>
+              <td>{{ 'Read' if notification.is_read else 'Unread' }}</td>
+              <td>{{ notification.timestamp }}</td>
+              <td>
+                <form method="post" action="{{ url_for('delete_notification', notification_id=notification.id) }}" style="display:inline;">
+                  <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this notification?');"><i class="bi bi-trash"></i> Delete</button>
+                </form>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <p class="text-center">You have no notifications.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('[id^="toggle-btn-"]').forEach(function(btn) {
+      function updateLabel() {
+        btn.textContent = btn.getAttribute('aria-expanded') === 'true' ? 'Close' : 'Open';
+      }
+      // Set initial label
+      updateLabel();
+      // Listen for attribute changes after click
+      btn.addEventListener('click', function() {
+        setTimeout(updateLabel, 50); // Wait for Bootstrap to update aria-expanded
+      });
+    });
+  });
+</script>

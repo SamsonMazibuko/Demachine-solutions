@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+{% block title %}Payroll Management | Admin | TMA Attendance{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h2 class="mb-4 fw-bold text-primary text-center">Payroll Management</h2>
+  <div class="d-flex justify-content-end mb-3">
+    <a href="/admin/payroll/generate" class="btn btn-success"><i class="bi bi-plus-circle"></i> Generate Payroll</a>
+  </div>
+  <div class="card shadow-lg border-0 mb-4" style="border-radius: 1.5rem;">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped align-middle">
+          <thead class="table-dark">
+            <tr>
+              <th>User</th>
+              <th>Period</th>
+              <th>Base Salary</th>
+              <th>Bonuses</th>
+              <th>Deductions</th>
+              <th>Net Pay</th>
+              <th>Generated At</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for payroll in payrolls %}
+            <tr>
+              <td>{{ payroll.user.name or payroll.user.username }}</td>
+              <td>{{ payroll.period_start.strftime('%Y-%m-%d') }} - {{ payroll.period_end.strftime('%Y-%m-%d') }}</td>
+              <td>R {{ payroll.base_salary }}</td>
+              <td>R {{ payroll.bonuses }}</td>
+              <td>R {{ payroll.deductions }}</td>
+              <td><strong>R {{ payroll.net_pay }}</strong></td>
+              <td>{{ payroll.generated_at.strftime('%Y-%m-%d') }}</td>
+              <td>
+                <a href="/payroll/{{ payroll.id }}/payslip" class="btn btn-outline-primary btn-sm mb-1 w-100"><i class="bi bi-file-earmark-text"></i> View Payslip</a>
+                <a href="/admin/payroll/{{ payroll.id }}" class="btn btn-primary btn-sm mb-1 w-100"><i class="bi bi-eye"></i> View</a>
+                <a href="/admin/payroll/{{ payroll.id }}/edit" class="btn btn-warning btn-sm mb-1 w-100"><i class="bi bi-pencil"></i> Edit</a>
+                <form method="post" action="/admin/payroll/{{ payroll.id }}/delete" style="display:inline;">
+                  <button type="submit" class="btn btn-danger btn-sm w-100" onclick="return confirm('Delete this payroll record?');"><i class="bi bi-trash"></i> Delete</button>
+                </form>
+              </td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="8" class="text-center">No payroll records found.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} 
